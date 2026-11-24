@@ -66,6 +66,10 @@ check("T19 Empty password can be hashed and verified", "empty string", true, Sec
 // ---- Anthony: Test hash length ----
 $shortHash = Security::hashPassword("123");
 check("T20 Short password can be hashed", "3-character string", true, strlen($shortHash) > 20);
+// ---- Anthony: Test hash uniqueness (salting) ----
+$hash1 = Security::hashPassword("password123");
+$hash2 = Security::hashPassword("password123");
+check("T21 Salting generates unique hashes", "same password hashed twice", false, $hash1 === $hash2);
 
 echo "\nRESULT: $passed passed, $failed failed\n";
 exit($failed > 0 ? 1 : 0);
