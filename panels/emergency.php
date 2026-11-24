@@ -8,6 +8,7 @@ function panel_emergency_handle(EmergencyService $em, string $action): void
         if ($id === '' || $d === null || $sp === null) { flash("Fill in vehicle ID, distance and speed.", "err"); return; }
         try {
             $eta = $em->requestPriority($id, $d, $sp);
+            History::logEmergency((int) $_SESSION['user_id'], $id, 'OVERRIDE', $d, $sp, $eta);   // saved in the database
             flash("Priority granted to $id. Signal is GREEN. ETA {$eta}s.");
         } catch (InvalidArgumentException $e) {
             flash("Error: " . $e->getMessage(), "err");
@@ -16,13 +17,14 @@ function panel_emergency_handle(EmergencyService $em, string $action): void
         $active = $em->getActiveVehicle();
         if ($active === null) { flash("No active emergency.", "err"); return; }
         $em->vehicleCleared($active);
+        History::logEmergency((int) $_SESSION['user_id'], $active, 'RESTORED');   // saved in the database
         flash("Vehicle $active cleared the junction. Normal signal timing restored.");
     }
 }
 
 function panel_emergency_render(EmergencyService $em): void { $active = $em->getActiveVehicle(); ?>
     <section class="card">
-        <h2>2. Emergency vehicle priority <span class="tag">UC-03 / BR-02</span></h2>
+        <h2>Emergency vehicle priority</h2>
         <?php if ($active): ?>
             <p class="alert-on">Emergency override ACTIVE for <strong><?= h($active) ?></strong>. Signal forced to GREEN.</p>
             <form method="post">

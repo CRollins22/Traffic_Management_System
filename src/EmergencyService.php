@@ -17,6 +17,7 @@ class EmergencyService
     /** Vehicle sends priority request + distance (m) and speed (km/h). Returns ETA in seconds. */
     public function requestPriority(string $vehicleId, int $distanceMeters, int $speedKmh): int
     {
+        if (trim($vehicleId) === "") throw new InvalidArgumentException("Vehicle ID is required");
         if ($speedKmh <= 0) throw new InvalidArgumentException("Speed must be positive");
         if ($distanceMeters < 0) throw new InvalidArgumentException("Distance cannot be negative");
         $etaSeconds = (int) round($distanceMeters / ($speedKmh / 3.6));
