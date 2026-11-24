@@ -63,3 +63,15 @@ function testT12(): bool // invalid violation type is rejected
 }
 
 echo "T12 Invalid violation type is rejected: " . (testT12() ? "PASS" : "FAIL") . "\n";
+function testT13(): bool // empty location is rejected
+{
+    $s = new ViolationService();
+    try {
+        $s->recordViolation('KDA 123A', 'speeding', '   ', '0712345678');
+    } catch (InvalidArgumentException $e) {
+        return $e->getMessage() === 'Location is required';
+    }
+    return false;
+}
+
+echo "T13 Empty location is rejected: " . (testT13() ? "PASS" : "FAIL") . "\n";
