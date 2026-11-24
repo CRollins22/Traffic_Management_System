@@ -13,6 +13,7 @@ function panel_login_handle(): void
         // Security best practice: Prevent session fixation attacks by 
     // assigning a new session ID immediately after a successful login.
 
+        // Generate a fresh session ID to prevent session fixation attacks.
     session_regenerate_id(true);          // new session id after sign-in blocks session fixation
     $_SESSION['user'] = $user['username'];
     $_SESSION['user_id'] = (int) $user['id'];
