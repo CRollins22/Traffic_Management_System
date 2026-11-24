@@ -75,3 +75,15 @@ function testT13(): bool // empty location is rejected
 }
 
 echo "T13 Empty location is rejected: " . (testT13() ? "PASS" : "FAIL") . "\n";
+function testT14(): bool // bad phone number is rejected
+{
+    $s = new ViolationService();
+    try {
+        $s->recordViolation('KDA 123A', 'speeding', 'Thika Road', '12345');
+    } catch (InvalidArgumentException $e) {
+        return $e->getMessage() === 'Invalid phone number';
+    }
+    return false;
+}
+
+echo "T14 Bad phone number is rejected: " . (testT14() ? "PASS" : "FAIL") . "\n";
