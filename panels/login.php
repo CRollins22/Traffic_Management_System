@@ -4,6 +4,7 @@
 /** Checks username + password and signs the operator in. */
 function panel_login_handle(): void
 {
+        // Look up the user in the database. trim() removes accidental spaces.
     $user = UserRepository::find(trim($_POST['user'] ?? ''));
     $ok = $user && $user['role'] === 'operator'                         // only operators can open the dashboard
           && Security::verifyPassword($_POST['password'] ?? '', $user['password_hash']);
