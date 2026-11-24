@@ -2,7 +2,10 @@
 // OWNER: Anthony Kariuki | BR-03 Security (hashed passwords)
 class Security
 {
-    /** Turns a password into a hash. Only the hash is stored, never the password. */
+        /** 
+     * BR-03: Passwords must never be stored in plain text.
+     * We use PHP's built-in password_hash with the default algorithm (currently bcrypt).
+     */
     public static function hashPassword(string $password): string
     {
         return password_hash($password, PASSWORD_DEFAULT);
