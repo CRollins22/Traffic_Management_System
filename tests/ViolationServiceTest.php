@@ -51,3 +51,15 @@ function testT11(): bool // empty plate is rejected
 }
 
 echo "T11 Empty plate is rejected: " . (testT11() ? "PASS" : "FAIL") . "\n";
+function testT12(): bool // invalid violation type is rejected
+{
+    $s = new ViolationService();
+    try {
+        $s->recordViolation('KDA 123A', 'jaywalking', 'Thika Road', '0712345678');
+    } catch (InvalidArgumentException $e) {
+        return $e->getMessage() === 'Invalid violation type';
+    }
+    return false;
+}
+
+echo "T12 Invalid violation type is rejected: " . (testT12() ? "PASS" : "FAIL") . "\n";
