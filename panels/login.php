@@ -9,6 +9,9 @@ function panel_login_handle(): void
           && Security::verifyPassword($_POST['password'] ?? '', $user['password_hash']);
     if (!$ok) { flash("Invalid username or password.", "err"); return; }   // same message for every failure, so attackers learn nothing
 
+        // Security best practice: Prevent session fixation attacks by 
+    // assigning a new session ID immediately after a successful login.
+
     session_regenerate_id(true);          // new session id after sign-in blocks session fixation
     $_SESSION['user'] = $user['username'];
     $_SESSION['user_id'] = (int) $user['id'];
