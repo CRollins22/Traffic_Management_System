@@ -21,6 +21,7 @@ class UserRepository
     {
         $st = db()->prepare('SELECT id, username, password_hash, role FROM users WHERE username = ?');
         $st->execute([$username]);
+                // Return the user row, or null if no matching user was found.
         return $st->fetch() ?: null;
     }
 }
