@@ -111,3 +111,11 @@ function testT16(): bool // badly formatted plate is rejected
 }
 
 echo "T16 Badly formatted plate is rejected: " . (testT16() ? "PASS" : "FAIL") . "\n";
+function testT17(): bool // phone number with spaces is accepted
+{
+    $s = new ViolationService();
+    $v = $s->recordViolation('KDA 123A', 'speeding', 'Thika Road', '+254 712 345 678');
+    return $v['phone'] === '+254712345678';
+}
+
+echo "T17 Phone number with spaces is accepted: " . (testT17() ? "PASS" : "FAIL") . "\n";

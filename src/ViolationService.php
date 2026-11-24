@@ -18,7 +18,7 @@ class ViolationService
         $plate = strtoupper(trim($plate));
         $type = strtolower(trim($type));
         $location = trim($location);
-        $phone = trim($phone);
+                $phone = preg_replace('/[\s-]/', '', trim($phone));
 
         if ($plate === '') {
             throw new InvalidArgumentException('Number plate is required');
