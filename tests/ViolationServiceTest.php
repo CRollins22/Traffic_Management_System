@@ -99,3 +99,15 @@ function testT15(): bool // each violation type gets the right fine
 }
 
 echo "T15 Each violation type gets the right fine: " . (testT15() ? "PASS" : "FAIL") . "\n";
+function testT16(): bool // badly formatted plate is rejected
+{
+    $s = new ViolationService();
+    try {
+        $s->recordViolation('K1', 'speeding', 'Thika Road', '0712345678');
+    } catch (InvalidArgumentException $e) {
+        return $e->getMessage() === 'Invalid number plate';
+    }
+    return false;
+}
+
+echo "T16 Badly formatted plate is rejected: " . (testT16() ? "PASS" : "FAIL") . "\n";

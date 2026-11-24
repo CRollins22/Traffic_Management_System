@@ -23,6 +23,9 @@ class ViolationService
         if ($plate === '') {
             throw new InvalidArgumentException('Number plate is required');
         }
+                if (!preg_match('/^[A-Z]{2,3}\s?\d{3}[A-Z]?$/', $plate)) {
+            throw new InvalidArgumentException('Invalid number plate');
+        }
         if (!isset(self::FINES[$type])) {
             throw new InvalidArgumentException('Invalid violation type');
         }
