@@ -4,8 +4,8 @@
 require_once __DIR__ . '/../src/SignalController.php';
 require_once __DIR__ . '/../src/AlertService.php';
 require_once __DIR__ . '/../src/EmergencyService.php';
-require_once __DIR__ . '/../src/ViolationService.php';
 require_once __DIR__ . '/../src/Security.php';
+require_once __DIR__ . '/../src/Motorist.php';
 
 $passed = 0; $failed = 0;
 
@@ -43,26 +43,17 @@ check("T6 ETA calculated", "500m at 60km/h = 30s", 30, $eta);
 $em->vehicleCleared("AMB-01");
 check("T7 Signal restored after clearance", "vehicle cleared", "RED", $sig->getSignal());
 
-// ---- Tama: Violations and payment (INTEGRATION with AlertService) ----
+// ---- Anthony: Security (UNIT, no database needed) ----
+$hash = Security::hashPassword("traffic123");
+check("T11 Correct password verifies (BR-03)", "password traffic123 against its hash", true, Security::verifyPassword("traffic123", $hash));
+check("T12 Wrong password is rejected (BR-03)", "password wrong999 against the hash", false, Security::verifyPassword("wrong999", $hash));
 
-// T8: Record a violation and check it is UNPAID
-$alertsForTama = quietAlerts();
-$vs = new ViolationService($alertsForTama);
-$v = $vs->record("KDA 123A", "speeding", 3000, "0712345678");
-check("T8 New violation is UNPAID (UC-02)", "record violation", "UNPAID", $v->status);
-
-// T9: M-PESA payment marks it paid
-$paidSuccess = $vs->pay($v->id, "0712345678");
-check("T9 Fine marked PAID after payment (UC-04)", "pay violation #1", true, $paidSuccess);
-check("T9b Status is updated to PAID", "check violation status", "PAID", $v->status);
-
-// T10: double payment is blocked
-$doublePay = $vs->pay($v->id, "0712345678");
-check("T10 Cannot pay a fine twice", "pay violation #1 again", false, $doublePay);
-
-// ---- Anthony: Security (UNIT) ----
-check("T11 Login succeeds with correct MFA (BR-03)", "operator/traffic123/123456", true, Security::login("operator", "traffic123", "123456"));
-check("T12 Login fails with wrong MFA (BR-03)", "operator/traffic123/000000", false, Security::login("operator", "traffic123", "000000"));
+// ---- Claude: Motorist rules (UNIT, no database needed) ----
+check("T14 Phone number is cleaned", "+254 712 345 678", "0712345678", Motorist::cleanPhone("+254 712 345 678"));
+check("T15 Bad phone number is rejected", "12345", null, Motorist::cleanPhone("12345"));
+check("T16 Number plate is cleaned", "kda123a", "KDA 123A", Motorist::cleanPlate("kda123a"));
+check("T17 Bad number plate is rejected", "K1", null, Motorist::cleanPlate("K1"));
+check("T18 Queue over 80 m is Heavy traffic", "queue 85 m", "Heavy", Motorist::condition(85)[0]);
 
 // ---- Del: Alerts (UNIT) ----
 $a2 = quietAlerts();

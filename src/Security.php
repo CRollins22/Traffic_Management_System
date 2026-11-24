@@ -1,14 +1,16 @@
 <?php
-// OWNER: Anthony Kariuki | BR-03 Security (operator login with MFA)
+// OWNER: Anthony Kariuki | BR-03 Security (hashed passwords)
 class Security
 {
-    private const USER = "operator";
-    private const PASSWORD = "traffic123";
-    private const MFA_CODE = "123456";   // fixed code for the demo
-
-    /** BR-03: operator needs correct password AND MFA code. */
-    public static function login(string $user, string $password, string $mfa): bool
+    /** Turns a password into a hash. Only the hash is stored, never the password. */
+    public static function hashPassword(string $password): string
     {
-        return $user === self::USER && $password === self::PASSWORD && $mfa === self::MFA_CODE;
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    /** True if the typed password matches the stored hash. */
+    public static function verifyPassword(string $password, string $hash): bool
+    {
+        return password_verify($password, $hash);
     }
 }
