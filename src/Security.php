@@ -14,6 +14,7 @@ class Security
     /** True if the typed password matches the stored hash. */
     public static function verifyPassword(string $password, string $hash): bool
     {
+                // Compare the plain text password against the stored hash.
         return password_verify($password, $hash);
     }
 }
