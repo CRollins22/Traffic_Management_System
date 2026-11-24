@@ -6,6 +6,7 @@ function panel_login_handle(): void
 {
         // Look up the user in the database. trim() removes accidental spaces.
     $user = UserRepository::find(trim($_POST['user'] ?? ''));
+        // Verify the user exists, is an operator, and the password matches the hash.
     $ok = $user && $user['role'] === 'operator'                         // only operators can open the dashboard
           && Security::verifyPassword($_POST['password'] ?? '', $user['password_hash']);
     if (!$ok) { flash("Invalid username or password.", "err"); return; }   // same message for every failure, so attackers learn nothing
