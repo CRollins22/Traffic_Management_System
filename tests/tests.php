@@ -63,6 +63,9 @@ check("T13 SMS alert recorded", "send 1 SMS", 1, count($a2->getAlerts()));
 // ---- Anthony: Additional Security edge cases ----
 $emptyHash = Security::hashPassword("");
 check("T19 Empty password can be hashed and verified", "empty string", true, Security::verifyPassword("", $emptyHash));
+// ---- Anthony: Test hash length ----
+$shortHash = Security::hashPassword("123");
+check("T20 Short password can be hashed", "3-character string", true, strlen($shortHash) > 20);
 
 echo "\nRESULT: $passed passed, $failed failed\n";
 exit($failed > 0 ? 1 : 0);
