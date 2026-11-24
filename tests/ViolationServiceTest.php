@@ -39,3 +39,15 @@ function testT10(): bool // double payment is blocked
 }
 
 echo "T10 Paying twice is blocked: " . (testT10() ? "PASS" : "FAIL") . "\n";
+function testT11(): bool // empty plate is rejected
+{
+    $s = new ViolationService();
+    try {
+        $s->recordViolation('   ', 'speeding', 'Thika Road', '0712345678');
+    } catch (InvalidArgumentException $e) {
+        return $e->getMessage() === 'Number plate is required';
+    }
+    return false;
+}
+
+echo "T11 Empty plate is rejected: " . (testT11() ? "PASS" : "FAIL") . "\n";
