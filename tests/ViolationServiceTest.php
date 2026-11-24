@@ -25,3 +25,17 @@ function testT9(): bool // M-PESA payment marks it paid
 }
 
 echo "T9 Payment marks the violation as paid: " . (testT9() ? "PASS" : "FAIL") . "\n";
+function testT10(): bool // double payment is blocked
+{
+    $s = new ViolationService();
+    $v = $s->recordViolation('KDA 123A', 'illegal_parking', 'CBD', '0712345678');
+    $s->payViolation($v['id']);
+    try {
+        $s->payViolation($v['id']);
+    } catch (RuntimeException $e) {
+        return true;
+    }
+    return false;
+}
+
+echo "T10 Paying twice is blocked: " . (testT10() ? "PASS" : "FAIL") . "\n";
