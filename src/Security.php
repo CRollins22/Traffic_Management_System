@@ -1,5 +1,9 @@
 <?php
 // OWNER: Anthony Kariuki | BR-03 Security (hashed passwords)
+/**
+ * Handles all cryptographic operations for user authentication.
+ * Part of BR-03 compliance.
+ */
 class Security
 {
         /** 
