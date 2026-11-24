@@ -5,6 +5,7 @@ class UserRepository
     /** Saves a new user (for road users later). Returns false if the username is already taken. */
     public static function create(string $username, string $passwordHash, string $role = 'road_user'): bool
     {
+                // Attempt to insert the new user into the database.
         try {
             $st = db()->prepare('INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)');
             $st->execute([$username, $passwordHash, $role]);
