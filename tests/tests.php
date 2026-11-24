@@ -60,5 +60,9 @@ $a2 = quietAlerts();
 $a2->sendSms("0700000000", "Test");
 check("T13 SMS alert recorded", "send 1 SMS", 1, count($a2->getAlerts()));
 
+// ---- Anthony: Additional Security edge cases ----
+$emptyHash = Security::hashPassword("");
+check("T19 Empty password can be hashed and verified", "empty string", true, Security::verifyPassword("", $emptyHash));
+
 echo "\nRESULT: $passed passed, $failed failed\n";
 exit($failed > 0 ? 1 : 0);
