@@ -87,3 +87,15 @@ function testT14(): bool // bad phone number is rejected
 }
 
 echo "T14 Bad phone number is rejected: " . (testT14() ? "PASS" : "FAIL") . "\n";
+function testT15(): bool // each violation type gets the right fine
+{
+    $s = new ViolationService();
+    $a = $s->recordViolation('KDA 123A', 'speeding', 'Thika Road', '0712345678');
+    $b = $s->recordViolation('KDB 456B', 'red_light', 'Uhuru Highway', '0712345678');
+    $c = $s->recordViolation('KDC 789C', 'illegal_parking', 'CBD', '0712345678');
+    return $a['fine'] === 3000
+        && $b['fine'] === 5000
+        && $c['fine'] === 2000;
+}
+
+echo "T15 Each violation type gets the right fine: " . (testT15() ? "PASS" : "FAIL") . "\n";
